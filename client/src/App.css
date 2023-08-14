@@ -1,0 +1,197 @@
+body {
+  color: #222;
+
+}
+
+img {
+  max-width: 100%;
+}
+
+main {
+  max-width: 800px;
+  padding: 10px;
+  margin: 0 auto;
+}
+
+header {
+  margin-bottom: 50px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header a {
+  text-decoration: none;
+  color: inherit;
+}
+
+header a.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding-bottom: 5px;
+  transition: all ease-in-out 0.5s;
+}
+
+header a.logo:hover {
+  color: orange;
+  font-size: x-large;
+  border-bottom: 5px solid orange;
+}
+
+header nav {
+  display: flex;
+  gap: 15px;
+
+}
+
+header nav a {
+  transition: all ease-in-out 0.5s;
+  padding-bottom: 5px;
+}
+
+header nav a:hover {
+  color: orange;
+  font-weight: bold;
+  border-bottom: 3px solid orange;
+
+}
+
+div.post {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+@media screen and (min-width: 700px) {
+  div.post {
+    grid-template-columns: .9fr 1.1fr;
+  }
+}
+
+div .post div .content h2 {
+  font-size: 1.8rem;
+  margin: 0px;
+}
+
+div .post p.info {
+  color: #888;
+  font-size: .7rem;
+  margin: 6px 0px;
+  font-weight: bold;
+  display: flex;
+  gap: 10px;
+}
+
+div .post p.info a.author {
+  color: #333;
+}
+
+div .post p.summary {
+  margin: 10px 0px;
+  line-height: 1.4rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+  margin: auto;
+}
+
+form input {
+  border-radius: 5px;
+  border: #333 1px solid;
+  padding: 8px 5px;
+  margin-bottom: 20px;
+  background-color: transparent;
+}
+
+form button {
+  padding: 8px 0px;
+  background-color: transparent;
+  color: #222222;
+  border: 1px solid #222222;
+  border-radius: 5px;
+}
+
+form button:hover {
+  padding: 8px 0px;
+  background-color: #222222;
+  color: #fff;
+  border-radius: 5px;
+}
+
+form h1 {
+  text-align: center;
+}
+
+.my-link {
+  color: inherit;
+  text-decoration: none;
+  /* Add more styles as needed */
+}
+
+.post-page h1 {
+  text-align: center;
+}
+
+.time-stamp {
+  text-align: center;
+  color: #7a757d;
+}
+
+.author {
+  text-align: center;
+  color: #7a757d;
+}
+
+.btn {
+  padding: 8px 0px;
+  background-color: #222;
+  color: #fff;
+  border-radius: 5px;
+  padding: 8px 15px;
+  text-decoration: none;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+div.post-page div.image img {
+  object-fit: cover;
+  object-position: center center;
+  width: 100%;
+}
+
+.bg-login-register {
+  background: url('./Images/Login-Register-bg.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.p-passRecovery {
+  max-width: 500px;
+  margin: auto;
+  text-align: end;
+  padding-top: 10px;
+}
+
+.p-passRecovery a {
+  text-decoration: none;
+  color: inherit;
+  transition: all ease-in-out .5s;
+}
+
+.p-passRecovery a:hover {
+  color: orange;
+  font-weight: bold;
+  border-bottom: 3px solid orange;
+}
+
+.action-btn {
+ display: flex;
+ justify-content: center;
+ align-items: center; 
+}
