@@ -12,6 +12,7 @@ const uploadMiddleware = multer({ dest: 'uploads/' });
 const nodemailer = require("nodemailer");
 const fs = require('fs');
 const bodyParser = require('body-parser');
+const crypto = require('crypto');
 mongoConnection();
 
 app.use(cors({
@@ -26,6 +27,7 @@ app.use('/uploads', express.static(__dirname + '/uploads'));
 
 const salt = bcrypt.genSaltSync(10)
 const secret = "UsmanKhalil"
+const tokenStore = new Map();
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -164,14 +166,18 @@ app.get('/post/:id', async (req, res) => {
 //Forget Password
 app.post('/forgetpassword', async (req, res) => {
     const { email } = req.body;
+    // Generate a random token
+    const token = crypto.randomBytes(32).toString('hex');
+
+    // Store the token with the associated email
+    tokenStore.set(email, token);
     const findMail = await User.findOne({ email })
     if (!findMail) {
         return res.json({ status: 404, message: "User not found" })
     }
-    const recoveryToken = 'your-generated-token';
-
+    const expirationTime = Date.now() + 3600000;
     // Create a password recovery link with the token
-    const recoveryLink = `https://your-app.com/reset-password/${recoveryToken}`;
+    const recoveryLink = `http://localhost:3000/reset-password?email=${email}&token=${token}&expires=${expirationTime}`;
 
     // Send the password recovery email
     transporter.sendMail({
@@ -190,14 +196,51 @@ app.post('/forgetpassword', async (req, res) => {
         }
     });
 })
+//
+app.post('/reset-password', async (req, res) => {
+    const { email, token, newPassword } = req.body;
+    const expirationTime = req.query.expires;
+    if (Date.now() > expirationTime) {
+        // Link has expired, handle accordingly
+        return res.status(400).json({ error: 'Recovery link has expired.' });
+    }
+
+
+    try {
+        // Check if the token matches the stored token for the email
+        const storedToken = tokenStore.get(email);
+        if (token !== storedToken) {
+            return res.status(400).json({ error: 'Invalid token.' });
+        }
+
+        // Find the user by email
+        const user = await User.findOne({ email: "usmankhalil.201905593@gcuf.edu.pk" });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        // Update the user's password and save
+        user.password = bcrypt.hashSync(newPassword, salt);
+        await user.save();
+
+        // Clear the token from the store
+        tokenStore.delete(email);
+
+        res.json({ message: 'Password reset successful.' });
+    } catch (error) {
+        console.error('Error resetting password:', error);
+        res.status(500).json({ error: 'An error occurred while resetting the password.' });
+    }
+});
 //Delete the Post
 app.delete('/delete/:id', async (req, res) => {
     try {
         const delDoc = await User.findByIdAndDelete(req.params.id);
         if (!delDoc) {
-            return res.json({ success:'false', message: "Couldn't find" });
+            return res.json({ success: 'false', message: "Couldn't find" });
         }
-        res.json({ success:"true", message: 'Delete successfully' });
+        res.json({ success: "true", message: 'Delete successfully' });
     } catch (error) {
         res.json({ status: 404, message: error.message });
     }

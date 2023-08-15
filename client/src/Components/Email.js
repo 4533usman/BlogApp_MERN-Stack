@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { toast } from 'react-toastify';
 import '../App.css'
+import { useNavigate } from 'react-router-dom';
 
 const Email = () => {
     const [email, setEmail] = useState();
+    const navigate = useNavigate()
     const emailsendHandler = async (e) => {
         e.preventDefault();
         const response = await fetch("http://localhost:4000/forgetpassword",
@@ -26,6 +28,7 @@ const Email = () => {
         }
         else {
             toast.success(json.message)
+            setEmail('');
         }
     }
     return (
@@ -35,6 +38,7 @@ const Email = () => {
                 <input type="email" placeholder='Email address'
                     value={email}
                     onChange={e => setEmail(e.target.value)}
+                    required
                 />
                 <button>Send mail</button>
             </form>

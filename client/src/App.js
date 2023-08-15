@@ -16,6 +16,7 @@ import EditPost from './Components/EditPost';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Email from './Components/Email';
+import PasswordRecovery from './Components/PasswordRecovery';
 const App = () => {
 
   return (
@@ -30,6 +31,7 @@ const App = () => {
           <Route exact path='/post/:id' element={<PostPage/>} />
           <Route exact path='/edit/:id' element={<EditPost/>} />
           <Route exact path='/forgetpassword' element={<Email/>} />
+          <Route exact path='/reset-password' element={<PasswordRecovery/>} />
         </Routes>
       </Router>
       <ToastContainer />
