@@ -33,11 +33,11 @@ header a.logo {
   transition: all ease-in-out 0.5s;
 }
 
-header a.logo:hover {
+/* header a.logo:hover {
   color: orange;
   font-size: x-large;
   border-bottom: 5px solid orange;
-}
+} */
 
 header nav {
   display: flex;
@@ -46,15 +46,18 @@ header nav {
 }
 
 header nav a {
+  border: #222 solid 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  border-radius: 3px;
   transition: all ease-in-out 0.5s;
-  padding-bottom: 5px;
 }
 
 header nav a:hover {
-  color: orange;
-  font-weight: bold;
-  border-bottom: 3px solid orange;
-
+  background-color: #222;
+  color: white;
 }
 
 div.post {
@@ -114,6 +117,7 @@ form button {
   color: #222222;
   border: 1px solid #222222;
   border-radius: 5px;
+  transition: all ease-in-out 0.5s;
 }
 
 form button:hover {
@@ -191,7 +195,39 @@ div.post-page div.image img {
 }
 
 .action-btn {
- display: flex;
- justify-content: center;
- align-items: center; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.reslog {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: fit-content;
+  margin: auto;
+  gap: 10px;
+
+}
+
+.btn-lg {
+  text-decoration: none;
+  color: inherit;
+  transition: all ease-in-out .5s;
+  font-size: x-large;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border: 1px solid #222;
+  font-weight: bold;
+  border-radius: 5px
+}
+
+
+
+.btn-lg:hover {
+  background-color: #222;
+  color: white;
+
 }

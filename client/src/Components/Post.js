@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { formatISO9075 } from "date-fns";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../App.css';
-
+import { UserContext } from '../UserContext';
 const Post = () => {
     const [data, setData] = useState([]);
+    const { userInfo } = useContext(UserContext)
     useEffect(() => {
         fetch('http://localhost:4000/post').then(response => {
             response.json().then(posts => {
                 setData(posts)
             })
         })
-
     }
         , [])
+    const username = userInfo?.username;
     return (
         <main>
             {data.length > 0 ? data.map(data => (
@@ -38,7 +39,22 @@ const Post = () => {
                         </p>
                     </div>
                 </div>
-            )):<h1>NoThing To Display</h1>}
+            )) :
+                <div className="background-NotFound">
+                    <h1 style={{ textAlign: 'center' }}>Not Found Any Blog! 404</h1>
+                    {username ?
+                        <p style={{ textAlign: 'center' }}>
+                            <Link className='btn-lg' to='/createpost'>Create Post</Link>
+                        </p> :
+                        <>
+                            <p style={{ textAlign: 'center', fontSize: "30px" }}>Please Create Account and start writing blog. If you have already an account then please login and start writing</p>
+                            <div className='reslog'>
+                                <Link className='btn-lg' to='/login'>LogIn</Link>
+                                <Link className='btn-lg' to='/register'>Create Account</Link>
+                            </div>
+                        </>}
+                </div>
+            }
 
         </main>
     )

@@ -35,7 +35,8 @@ const PostPage = () => {
         else {
             toast.error(json.message);
         }
-        if (!postinfo) return '';
+    }
+        if (!postinfo) return "";
         return (
             <main>
                 <div className='post-page'>
@@ -49,9 +50,9 @@ const PostPage = () => {
                             <Link to={`/edit/${postinfo._id}`} >
                                 <img src={editIcon} />
                             </Link>
-                            <p onClick={deleteHandler}>
+                            {/* <p onClick={deleteHandler}>
                                 <img src={deleteIcon} />
-                            </p>
+                            </p> */}
                         </div>
                     }
                     <div className='image'>
@@ -62,6 +63,5 @@ const PostPage = () => {
             </main>
         )
     }
-}
 
 export default PostPage

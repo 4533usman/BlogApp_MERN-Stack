@@ -236,7 +236,7 @@ app.post('/reset-password', async (req, res) => {
 //Delete the Post
 app.delete('/delete/:id', async (req, res) => {
     try {
-        const delDoc = await User.findByIdAndDelete(req.params.id);
+        const delDoc = await User.findByIdAndDelete(req.body.id);
         if (!delDoc) {
             return res.json({ success: 'false', message: "Couldn't find" });
         }
