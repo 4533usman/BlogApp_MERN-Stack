@@ -8,15 +8,19 @@ const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-  const navigate = useNavigate()
+  const [files, setFiles] = useState('');  const navigate = useNavigate()
   const submitHandler = async (e) => {
     e.preventDefault();
+    const data = new FormData();
+    data.set('username', username);
+    data.set('password', password);
+    data.set('email', email);
+    data.set('file', files[0]);
     const response = await fetch("http://localhost:4000/register", {
       method: 'POST',
-      body: JSON.stringify({ username, email, password }),
-      headers: { 'Content-type': 'application/json' },
-
+      body: data , 
     })
+    console.log(files)
     const json = await response.json()
     if (json.status === 409) {
       toast.warn(json.message);
@@ -30,6 +34,11 @@ const Register = () => {
     <main>
       <form className="form" onSubmit={submitHandler}>
         <h1>Register</h1>
+        <img alt='No File Uploaded..' src={files ? URL.createObjectURL(files[0]) : ''} className='profile-img' />
+        <input type='file'
+          onChange={e => { setFiles(e.target.files)}}
+          required
+        />
         <input type='text' placeholder='Username'
           value={username}
           onChange={e => { setUsername(e.target.value) }}

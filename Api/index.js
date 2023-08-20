@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const uploadMiddleware = multer({ dest: 'uploads/' });
+const uploadProfileMiddleware = multer({ dest: 'profileImg/' })
 const nodemailer = require("nodemailer");
 const fs = require('fs');
 const bodyParser = require('body-parser');
@@ -24,6 +25,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.json());
 app.use('/uploads', express.static(__dirname + '/uploads'));
+app.use('/profileImg', express.static(__dirname + '/profileImg'));
 
 const salt = bcrypt.genSaltSync(10)
 const secret = "UsmanKhalil"
@@ -36,7 +38,14 @@ const transporter = nodemailer.createTransport({
     }
 });
 // Register End point
-app.post('/register', async (req, res) => {
+app.post('/register', uploadProfileMiddleware.single('file'), async (req, res) => {
+    const { originalname, path } = req.file;
+    const parts = originalname.split('.');
+    const ext = parts[parts.length - 1];
+    const newPath = path + '.' + ext;
+    fs.renameSync(path, newPath);
+    uploadProfileMiddleware.single('file'),
+        console.log(req.file)
     const { username, email, password } = req.body;
     const findDuplicate = await User.findOne({ email })
     if (findDuplicate) {
@@ -46,7 +55,8 @@ app.post('/register', async (req, res) => {
         const userDoc = await User.create({
             username,
             email,
-            password: bcrypt.hashSync(password, salt)
+            password: bcrypt.hashSync(password, salt),
+            cover: newPath
         });
         res.json({ message: "User created successfully" });
     } catch (error) {
@@ -64,7 +74,7 @@ app.post('/login', async (req, res) => {
     if (passOk) {
         jwt.sign({ username: userDoc.username, id: userDoc._id }, secret, {}, (error, token) => {
             if (error) throw error;
-            res.cookie("token", token).json({ id: userDoc._id, username: userDoc.username, message: "Succesfully logged In" });
+            res.cookie("token", token).json({ id: userDoc._id, username: userDoc.username, cover: userDoc.cover, message: "Succesfully logged In" });
         })
     }
     else {
@@ -95,6 +105,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
     const ext = parts[parts.length - 1];
     const newPath = path + '.' + ext;
     fs.renameSync(path, newPath);
+    console.log(req.file)
     const { token } = req.cookies;
     jwt.verify(token, secret, {}, async (err, info) => {
         if (err) throw err;

@@ -24,6 +24,7 @@ const LogIn = () => {
       }
     )
     const json = await response.json();
+    console.log(json)
     if (json.success) {
       toast.error(json.message);
       setEmail("")

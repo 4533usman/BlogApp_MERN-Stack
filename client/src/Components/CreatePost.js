@@ -23,6 +23,7 @@ const CreatePost = () => {
             body: data,
             credentials: 'include'
         })
+        console.log(files)
         if (response.ok) {
             navigate('/');
         }

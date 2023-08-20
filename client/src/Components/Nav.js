@@ -34,10 +34,13 @@ const Nav = () => {
         <main className=''>
 
             <header>
-                <Link className='logo hover' to='/'>My Blog</Link>
+                <div>
+                    <Link className='logo hover' to='/'>My Blog</Link>
+                </div>
                 <nav>
                     {username && (
                         <>
+                            <img src={`http://localhost:4000/${userInfo.cover}`} height={30} width={30}/>
                             <Link to="/createpost">Create Post</Link>
                             <Link to="/login" onClick={logoutHandler}>Log Out</Link>
 
