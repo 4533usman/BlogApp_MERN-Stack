@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom'
 import { UserContext } from '../UserContext';
 import { toast } from 'react-toastify';
+import profileImg from '../Images/profile-circle-icon.png'
 
 const Nav = () => {
     const { setUserInfo, userInfo } = useContext(UserContext)
@@ -19,6 +20,7 @@ const Nav = () => {
                         setUserInfo(userinfo)
                     })
             })
+          
     }, [])
     const logoutHandler = async () => {
         const reponse = await fetch("http://localhost:4000/logout", {
@@ -40,16 +42,15 @@ const Nav = () => {
                 <nav>
                     {username && (
                         <>
-                            <img src={`http://localhost:4000/${userInfo.cover}`} height={30} width={30}/>
-                            <Link to="/createpost">Create Post</Link>
-                            <Link to="/login" onClick={logoutHandler}>Log Out</Link>
-
+                            <Link className='nav-Links' to="/createpost">Create Post</Link>
+                            <Link className='nav-Links' to="/login" onClick={logoutHandler}>Log Out</Link>
+                            <Link className='Profile-icon' to="/userprofile"><img src={profileImg}/></Link>
                         </>
                     )}
                     {!username && (
                         <>
-                            <Link to="login">Log In</Link>
-                            <Link to='register'>Register</Link>
+                            <Link className='nav-Links' to="login">Log In</Link>
+                            <Link className='nav-Links' to='register'>Register</Link>
                         </>
                     )}
                 </nav>

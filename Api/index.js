@@ -21,9 +21,9 @@ app.use(cors({
     origin: "http://localhost:3000"
 
 }));
-app.use(bodyParser.json());
-app.use(cookieParser());
 app.use(express.json());
+app.use(cookieParser());
+app.use(bodyParser.json());
 app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use('/profileImg', express.static(__dirname + '/profileImg'));
 
@@ -44,8 +44,7 @@ app.post('/register', uploadProfileMiddleware.single('file'), async (req, res) =
     const ext = parts[parts.length - 1];
     const newPath = path + '.' + ext;
     fs.renameSync(path, newPath);
-    uploadProfileMiddleware.single('file'),
-        console.log(req.file)
+    uploadProfileMiddleware.single('file')
     const { username, email, password } = req.body;
     const findDuplicate = await User.findOne({ email })
     if (findDuplicate) {
@@ -74,7 +73,7 @@ app.post('/login', async (req, res) => {
     if (passOk) {
         jwt.sign({ username: userDoc.username, id: userDoc._id }, secret, {}, (error, token) => {
             if (error) throw error;
-            res.cookie("token", token).json({ id: userDoc._id, username: userDoc.username, cover: userDoc.cover, message: "Succesfully logged In" });
+            res.cookie("token", token).json({ id: userDoc._id, username: userDoc.username, message: "Succesfully logged In" });
         })
     }
     else {
@@ -256,4 +255,17 @@ app.delete('/delete/:id', async (req, res) => {
         res.json({ status: 404, message: error.message });
     }
 });
+//get User Profile
+app.get('/userprofile', async (req, res) => {
+    const { token } = req.cookies
+    console.log("Token", token);
+    try {
+        jwt.verify(token, secret, {}, (err, info) => {
+            if (err) throw err;
+            res.json(info)
+        });
+    } catch (error) {
+        console.log(error.message)
+    }
+})
 app.listen(4000)

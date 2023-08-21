@@ -17,6 +17,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Email from './Components/Email';
 import PasswordRecovery from './Components/PasswordRecovery';
+import UserProfile from './Components/UserProfile';
 
 const App = () => {
 
@@ -29,10 +30,11 @@ const App = () => {
           <Route exact path='/login' element={<LogIn />} />
           <Route exact path='/register' element={<Register />} />
           <Route exact path='/createpost' element={<CreatePost />} />
-          <Route exact path='/post/:id' element={<PostPage/>} />
-          <Route exact path='/edit/:id' element={<EditPost/>} />
-          <Route exact path='/forgetpassword' element={<Email/>} />
-          <Route exact path='/reset-password' element={<PasswordRecovery/>} />
+          <Route exact path='/post/:id' element={<PostPage />} />
+          <Route exact path='/edit/:id' element={<EditPost />} />
+          <Route exact path='/forgetpassword' element={<Email />} />
+          <Route exact path='/reset-password' element={<PasswordRecovery />} />
+          <Route exact path='/userprofile' element={<UserProfile/>} />
         </Routes>
       </Router>
       <ToastContainer />
