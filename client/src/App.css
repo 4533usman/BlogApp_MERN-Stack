@@ -270,7 +270,7 @@ div.post-page div.image img {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 5px;
+  border-radius: 3px;
 }
 
 .img-frame {
@@ -298,4 +298,67 @@ div.post-page div.image img {
   color: inherit;
   font-weight: bold;
   margin-bottom: 10px;
+}
+
+.User-Post {
+  border: #222 1px solid;
+  border-radius: 3px;
+  max-width: 700px;
+  margin: auto;
+  margin-top: 10px;
+  padding: 5px;
+}
+
+.User-Postfirst {
+  display: flex;
+  align-items: center;
+}
+
+.User-Postfirst img {
+  height: 40px;
+  width: 40px;
+  border-radius: 100%;
+}
+
+.User-Postfirst div{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.User-Postfirst div h4 {
+  padding-left: 10px;
+
+}
+
+.User-Postfirst div p {
+  font-size: smaller;
+  color: #86838391;
+}
+
+.User-Postthird {
+  width: inherit;
+}
+
+.User-Postthird a img {
+  height: 400px;
+  margin: auto;
+  /* border: #222 1px solid; */
+}
+
+.User-Postseconddiv1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.User-Postseconddiv1 div {
+  display: flex;
+  gap: 10px;
+}
+
+.User-Postseconddiv1 div a img {
+  height: 20px;
+  width: 20px;
 }
