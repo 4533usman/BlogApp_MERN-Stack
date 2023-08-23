@@ -21,8 +21,8 @@ app.use(cors({
     origin: "http://localhost:3000"
 
 }));
-app.use(express.json());
 app.use(cookieParser());
+app.use(express.json());
 app.use(bodyParser.json());
 app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use('/profileImg', express.static(__dirname + '/profileImg'));
@@ -224,7 +224,7 @@ app.post('/reset-password', async (req, res) => {
         }
 
         // Find the user by email
-        const user = await User.findOne({ email: "usmankhalil.201905593@gcuf.edu.pk" });
+        const user = await User.findOne({ email });
 
         if (!user) {
             return res.status(404).json({ error: 'User not found.' });
@@ -258,14 +258,54 @@ app.delete('/delete/:id', async (req, res) => {
 //get User Profile
 app.get('/userprofile', async (req, res) => {
     const { token } = req.cookies
-    console.log("Token", token);
     try {
-        jwt.verify(token, secret, {}, (err, info) => {
-            if (err) throw err;
-            res.json(info)
+        if (!token) {
+            return res.status(401).json({ error: 'Unauthorized Role' });
+        }
+        jwt.verify(token, secret, {}, async (err, info) => {
+            if (err) {
+                return res.status(403).json({ error: 'Invalid token' });
+            }
+            const { id } = info;
+            const user = await User.findById({ _id: id })
+            res.json(user);
         });
     } catch (error) {
-        console.log(error.message)
+        console.log(error)
     }
 })
+//Route for change the password if the user is already logged in
+app.post('/userprofile/changePassword', async (req, res) => {
+    const { token } = req.cookies;
+    try {
+        if (!token) {
+            return res.status(401).json({ error: 'Unauthorized Role' });
+        }
+        jwt.verify(token, secret, {}, async (err, info) => {
+            if (err) {
+                return res.status(403).json({ error: 'Invalid token' });
+            }
+            const { id } = info;
+            const { newpassword, confirmpassword } = req.body;
+            if (newpassword !== confirmpassword) {
+                return res.status(400).json({ error: 'Passwords do not match' });
+            }
+            const user = await User.findById(id);
+            if (!user) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+            const passOk = bcrypt.compareSync(newpassword, user.password);
+            if (passOk) {
+                return res.status(400).json({ error: 'New password must be different' });
+            }
+            user.password = bcrypt.hashSync(newpassword, salt);
+            await user.save();
+            res.json({ success: 'Password reset successful.' });
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'An error occurred.' });
+    }
+});
+
 app.listen(4000)

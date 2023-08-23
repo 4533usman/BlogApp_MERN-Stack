@@ -12,7 +12,6 @@ const Post = () => {
                 setData(posts)
             })
         })
-        console.log(userInfo)
     }
         , [])
     const username = userInfo?.username;
