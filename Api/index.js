@@ -62,6 +62,31 @@ app.post('/register', uploadProfileMiddleware.single('file'), async (req, res) =
         res.status(400).json({ error: error.message });
     }
 })
+//Update user profile
+app.put('/editprofile', uploadProfileMiddleware.single('file'), async (req, res) => {
+    try {
+        let newPath = null;
+        if (req.file) {
+            const { originalname, path } = req.file;
+            const parts = originalname.split('.');
+            const ext = parts[parts.length - 1];
+            newPath = path + '.' + ext;
+            fs.renameSync(path, newPath);
+        }
+        const { id, username, email } = req.body;
+        const user = await User.findById(id)
+        user.username = username
+        user.email = email
+        user.cover = newPath
+
+        const updateUser = await user.save();
+        res.json({ success: true, message: "User Updated Successfully" });
+    } catch (error) {
+        res.status(500).json({ error: "An error occurred while updating the User" });
+    }
+
+
+})
 //Log in End Point
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
@@ -275,7 +300,7 @@ app.get('/userprofile', async (req, res) => {
     }
 })
 //Route for change the password if the user is already logged in
-app.post('/userprofile/changePassword', async (req, res) => {
+app.post('/changePassword', async (req, res) => {
     const { token } = req.cookies;
     try {
         if (!token) {

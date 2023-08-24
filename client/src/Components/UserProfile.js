@@ -38,8 +38,8 @@ const UserProfile = () => {
                 </div>
                 <div className='ptext'>{user.username}</div>
                 <div className='btn-group'>
-                    <Link to="/editprofie"><img src={EditProfile} height={30} width={30} /></Link>
-                    <Link to='changepassword'><img src={ChangePassword} height={30} width={30} /></Link>
+                    <Link to="/editprofile"><img src={EditProfile} height={30} width={30} /></Link>
+                    <Link to='/changepassword'><img src={ChangePassword} height={30} width={30} /></Link>
                 </div>
 
             </div>

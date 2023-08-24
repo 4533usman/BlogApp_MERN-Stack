@@ -19,6 +19,7 @@ import Email from './Components/Email';
 import PasswordRecovery from './Components/PasswordRecovery';
 import UserProfile from './Components/UserProfile';
 import ChangePassword from './Components/ChangePassword';
+import EditProfile from './Components/EditProfile';
 
 const App = () => {
 
@@ -36,7 +37,8 @@ const App = () => {
           <Route exact path='/forgetpassword' element={<Email />} />
           <Route exact path='/reset-password' element={<PasswordRecovery />} />
           <Route exact path='/userprofile' element={<UserProfile/>} />
-          <Route exact path='/userprofile/changepassword' element={<ChangePassword/>} />
+          <Route exact path='/changepassword' element={<ChangePassword/>} />
+          <Route exact path='/editprofile' element={<EditProfile/>} />
 
         </Routes>
       </Router>
