@@ -1,6 +1,6 @@
 body {
   color: #222;
-  background-color: rgb(132, 227, 231);
+  background-color: rgb(255, 255, 255);
 }
 
 img {
@@ -78,7 +78,7 @@ header nav {
 
 .nav-Links:hover {
   background-color: #fff;
-  color: rgb(107, 107, 233);
+  color: rgb(107, 107, 115);
 }
 
 div.post {
