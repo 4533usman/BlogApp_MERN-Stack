@@ -33,7 +33,7 @@ const Nav = () => {
     }
     const username = userInfo?.username;
     return (
-        <main className=''>
+        <>
 
             <header>
                 <div>
@@ -55,7 +55,7 @@ const Nav = () => {
                     )}
                 </nav>
             </header>
-        </main>
+        </>
     )
 }
 

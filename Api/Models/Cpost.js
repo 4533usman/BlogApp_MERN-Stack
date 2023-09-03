@@ -6,12 +6,16 @@ const CPsotSchema = new Schema({
     summary: String,
     content: String,
     cover: String,
-    author: { type: Schema.Types.ObjectId, ref: 'User' },
+    authorProfile: String,
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
 
 },
-{
+    {
         timestamps: true
     }
 );
- const CPostModel = model('CPost', CPsotSchema)
- module.exports = CPostModel;
+const CPostModel = model('CPost', CPsotSchema)
+module.exports = CPostModel;

@@ -39,6 +39,7 @@ const LogIn = () => {
 
       toast.success(json.message);
       setUserInfo(json);
+      console.log(json);
       navigate('/')
     }
   }

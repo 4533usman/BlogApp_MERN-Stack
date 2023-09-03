@@ -3,6 +3,7 @@ import { formatISO9075 } from "date-fns";
 import { Link, useNavigate } from 'react-router-dom';
 import '../App.css';
 import { UserContext } from '../UserContext';
+import profileImg from '../Images/profile-circle-icon.png'
 const Post = () => {
     const [data, setData] = useState([]);
     const { userInfo } = useContext(UserContext)
@@ -14,31 +15,38 @@ const Post = () => {
         })
     }
         , [])
+        console.log(data)
     const username = userInfo?.username;
     return (
         <main>
-            {data.length > 0 ? data.map(data => (
-                <div className='post' key={data._id}>
-                    <Link to={`/post/${data._id}`}>
-                        <div className='pic'>
-                            <img src={'http://localhost:4000/' + data.cover} alt="" />
+            {data.length > 0 ? data.map(post => (
+                <div className='User-Post' key={post._id}>
+                    <div className='User-Postfirst'>
+                        <img src={`http://localhost:4000/${post.authorProfile}`} />
+                        <div>
+                            <h4>{post.author.username}</h4>
+                            <p>{formatISO9075(new Date(post.createdAt))}</p>
                         </div>
-                    </Link>
-                    <div className='content'>
-                        <h2>
-                            <Link className="my-link" to={`/post/${data._id}`}>
-                                {data.title}
-                            </Link>
-                        </h2>
-                        <p className='info'>
-                            <author>{data.author.username}</author>
-                            <time>{formatISO9075(new Date(data.createdAt))}</time>
-                        </p>
-                        <p className='summary'>
-                            {data.summary.length < 200 ? data.summary : data.summary.slice(0, 200) + "  ...."}
-                        </p>
+                    </div>
+                    <div className='User-Postsecond'>
+                        <div className='User-Postseconddiv1'>
+                            <h4>{post.title}</h4>
+                            {/* <div>
+                                <Link to={`/edit/${post._id}`}><img src={EditIcon} /></Link>
+                                <Link><img src={DeleteIcon} /></Link>
+                            </div> */}
+                        </div>
+                        <div>
+                            <p>{post.summary}</p>
+                        </div>
+                    </div>
+                    <div className='User-Postthird'>
+                        <Link to={`/post/${post._id}`}>
+                            <img src={`http://localhost:4000/${post.cover}`} />
+                        </Link>
                     </div>
                 </div>
+
             )) :
                 <div className="background-NotFound">
                     <h1 style={{ textAlign: 'center' }}>Not Found Any Blog! 404</h1>

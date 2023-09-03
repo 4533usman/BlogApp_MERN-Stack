@@ -96,9 +96,9 @@ app.post('/login', async (req, res) => {
     }
     const passOk = bcrypt.compareSync(password, userDoc.password);
     if (passOk) {
-        jwt.sign({ username: userDoc.username, id: userDoc._id }, secret, {}, (error, token) => {
+        jwt.sign({ username: userDoc.username, id: userDoc._id, cover: userDoc.cover }, secret, {}, (error, token) => {
             if (error) throw error;
-            res.cookie("token", token).json({ id: userDoc._id, username: userDoc.username, message: "Succesfully logged In" });
+            res.cookie("token", token).json({ id: userDoc._id, username: userDoc.username, cover: userDoc.cover, message: "Succesfully logged In" });
         })
     }
     else {
@@ -134,12 +134,14 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
     jwt.verify(token, secret, {}, async (err, info) => {
         if (err) throw err;
         const { title, summary, content } = req.body;
+        const { id, username, cover } = info;
         const postDoc = await CPost.create({
             title,
             summary,
             content,
             cover: newPath,
-            author: info.id,
+            authorProfile: cover,
+            author: id
         });
         res.json({ postDoc, message: "Post created successfully" });
     })
