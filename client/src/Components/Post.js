@@ -6,6 +6,8 @@ import { UserContext } from '../UserContext';
 import profileImg from '../Images/profile-circle-icon.png'
 const Post = () => {
     const [data, setData] = useState([]);
+    const [showComments, setShowComments] = useState(false)
+    const [showLikes, setShowLikes] = useState(false)
     const { userInfo } = useContext(UserContext)
     useEffect(() => {
         fetch('http://localhost:4000/post').then(response => {
@@ -56,6 +58,7 @@ const Post = () => {
                                 </svg></Link>
                         </div>
                         <hr />
+
                     </div>
                 </div>
             )) :
