@@ -4,20 +4,39 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../App.css';
 import { UserContext } from '../UserContext';
 import profileImg from '../Images/profile-circle-icon.png'
+import CustomModel from '../Utilities/CustomModel';
 const Post = () => {
     const [data, setData] = useState([]);
     const [showComments, setShowComments] = useState(false)
     const [showLikes, setShowLikes] = useState(false)
+    const [comment, setComment] = useState("")
     const { userInfo } = useContext(UserContext)
+    // Comment Handler
+    const commentHandler = (e) => {
+        if (e.key === 'Enter') {
+            // Prevent the default behavior of the Enter key (e.g., form submission)
+            e.preventDefault();
+            console.log(comment)
+            setComment("")
+            // Update your state or perform any other necessary action
+
+
+        }
+    }
     useEffect(() => {
         fetch('http://localhost:4000/post').then(response => {
             response.json().then(posts => {
                 setData(posts)
+                // console.log(userInfo)
             })
         })
     }
         , [])
-    console.log(data)
+
+    const toggleComment = () => {
+        setShowComments(showComments ? false : true)
+    }
+
     const username = userInfo?.username;
     return (
         <main>
@@ -51,14 +70,28 @@ const Post = () => {
 
                                 <h6 style={{ cursor: "pointer" }}>Likes: 0</h6>
                             </div>
-                            <div style={{ cursor: "pointer" }}><h6>Comments: 0</h6></div>
+                            <div style={{ cursor: "pointer" }}><h6 onClick={toggleComment}>Comments: 0</h6></div>
                             <Link to={`/post/${post._id}`} style={{ textDecoration: "none" }} className="align-items-center text-dark">
                                 Read More <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
                                 </svg></Link>
                         </div>
                         <hr />
+                        <div className='d-flex  align-items-center gap-3'>
+                            <img src={`http://localhost:4000/${userInfo.cover}`} className='rounded-circle  flex-shrink-1' height={40} width={40} />
+                            <div className='flex-grow-1'>
+                                <div className='d-flex'>
+                                    <input type="text" className="form-control" id="floatingInput" placeholder="Write Comment...."
+                                        value={comment}
+                                        onChange={(e) => setComment(e.target.value)}
+                                        onKeyPress={commentHandler} />
 
+                                </div>
+                            </div>
+                        </div>
+                        {/* <div className={`${showComments?'d-block':'d-none'}`}>
+                            <CustomModel post={post} />
+                        </div> */}
                     </div>
                 </div>
             )) :
@@ -81,5 +114,6 @@ const Post = () => {
         </main>
     )
 }
+
 
 export default Post
