@@ -32,6 +32,7 @@ const Post = () => {
         })
     }
         , [])
+    console.log(userInfo)
 
     const toggleComment = () => {
         setShowComments(showComments ? false : true)
@@ -77,18 +78,24 @@ const Post = () => {
                                 </svg></Link>
                         </div>
                         <hr />
-                        <div className='d-flex  align-items-center gap-3'>
-                            <img src={`http://localhost:4000/${userInfo.cover}`} className='rounded-circle  flex-shrink-1' height={40} width={40} />
-                            <div className='flex-grow-1'>
-                                <div className='d-flex'>
-                                    <input type="text" className="form-control" id="floatingInput" placeholder="Write Comment...."
-                                        value={comment}
-                                        onChange={(e) => setComment(e.target.value)}
-                                        onKeyPress={commentHandler} />
-
+                        {userInfo && userInfo.username ? (
+                            <div className='d-flex align-items-center gap-3'>
+                                <img src={`http://localhost:4000/${post.authorProfile}`} className='rounded-circle flex-shrink-1' height={40} width={40} />
+                                <div className='flex-grow-1'>
+                                    <div className='d-flex'>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="floatingInput"
+                                            placeholder="Write Comment...."
+                                            value={comment}
+                                            onChange={(e) => setComment(e.target.value)}
+                                            onKeyPress={commentHandler}
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        ) : null}
                         {/* <div className={`${showComments?'d-block':'d-none'}`}>
                             <CustomModel post={post} />
                         </div> */}

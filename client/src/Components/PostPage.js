@@ -89,6 +89,21 @@ const PostPage = () => {
 
                     </div>
                     <hr />
+                    {userInfo && userInfo.username ? (
+                        <div className='d-flex align-items-center gap-3'>
+                            <img src={`http://localhost:4000/${postinfo.authorProfile}`} className='rounded-circle flex-shrink-1' height={40} width={40} />
+                            <div className='flex-grow-1'>
+                                <div className='d-flex'>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="floatingInput"
+                                        placeholder="Write Comment...."
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    ) : null}
                 </div>
             </div>
         </main>
