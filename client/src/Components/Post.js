@@ -5,6 +5,7 @@ import '../App.css';
 import { UserContext } from '../UserContext';
 import profileImg from '../Images/profile-circle-icon.png'
 import CustomModel from '../Utilities/CustomModel';
+import { toast } from 'react-toastify';
 const Post = () => {
     const [data, setData] = useState([]);
     const [showComments, setShowComments] = useState(false)
@@ -12,17 +13,39 @@ const Post = () => {
     const [comment, setComment] = useState("")
     const { userInfo } = useContext(UserContext)
     // Comment Handler
-    const commentHandler = (e) => {
-        if (e.key === 'Enter') {
-            // Prevent the default behavior of the Enter key (e.g., form submission)
-            e.preventDefault();
-            console.log(comment)
-            setComment("")
-            // Update your state or perform any other necessary action
+    const createComment = async (postId) => {
+        try {
+            const response = await fetch(`http://localhost:4000/post/${postId}/comments`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ user: userInfo._id, text: comment }),
+            });
 
+            if (response.ok) {
+                const updatedPost = await response.json();
 
+                // Find the index of the updated post in the data array
+                const postIndex = data.findIndex((post) => post._id === updatedPost._id);
+
+                // Update the data array with the updated post
+                if (postIndex !== -1) {
+                    const newData = [...data];
+                    newData[postIndex] = updatedPost;
+                    setData(newData);
+                }
+
+                setComment(''); // Clear the comment input
+                toast.success('Comment Added');
+            }
+            else {
+                toast.error('Error creating comment');
+            }
+        } catch (error) {
+            console.error(error);
         }
-    }
+    };
     useEffect(() => {
         fetch('http://localhost:4000/post').then(response => {
             response.json().then(posts => {
@@ -31,9 +54,7 @@ const Post = () => {
             })
         })
     }
-        , [])
-    console.log(userInfo)
-
+        , [comment])
     const toggleComment = () => {
         setShowComments(showComments ? false : true)
     }
@@ -71,7 +92,7 @@ const Post = () => {
 
                                 <h6 style={{ cursor: "pointer" }}>Likes: 0</h6>
                             </div>
-                            <div style={{ cursor: "pointer" }}><h6 onClick={toggleComment}>Comments: 0</h6></div>
+                            <div style={{ cursor: "pointer" }}><h6 onClick={toggleComment}>Comments: {post.comments.length}</h6></div>
                             <Link to={`/post/${post._id}`} style={{ textDecoration: "none" }} className="align-items-center text-dark">
                                 Read More <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
@@ -90,15 +111,17 @@ const Post = () => {
                                             placeholder="Write Comment...."
                                             value={comment}
                                             onChange={(e) => setComment(e.target.value)}
-                                            onKeyPress={commentHandler}
+                                            onKeyPress={(e) => {
+                                                if (e.key === 'Enter') createComment(post._id);
+                                            }}
                                         />
                                     </div>
                                 </div>
                             </div>
                         ) : null}
-                        {/* <div className={`${showComments?'d-block':'d-none'}`}>
+                        <div className={`${showComments?'d-block':'d-none'}`}>
                             <CustomModel post={post} />
-                        </div> */}
+                        </div>
                     </div>
                 </div>
             )) :

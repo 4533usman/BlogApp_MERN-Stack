@@ -334,5 +334,52 @@ app.post('/changePassword', async (req, res) => {
         res.status(500).json({ error: 'An error occurred.' });
     }
 });
+app.post('/post/:postId/comments', async (req, res) => {
+    const { postId } = req.params;
+    const { user, text } = req.body;
 
+    try {
+        const post = await CPost.findById(postId);
+        if (!post) {
+            return res.status(404).json({ error: 'Post not found' });
+        }
+
+        const newComment = {
+            user,
+            text,
+        };
+
+        post.comments.push(newComment);
+        await post.save();
+
+        res.json(post);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+// app.post('/post/:postId/comments', async (req, res) => {
+//     const { postId } = req.params;
+//     const { user, text } = req.body;
+
+//     try {
+//         const post = await CPost.findById(postId);
+//         if (!post) {
+//             return res.status(404).json({ error: 'Post not found' });
+//         }
+
+//         const newComment = {
+//             user,
+//             text,
+//         };
+
+//         post.comments.push(newComment);
+//         await post.save();
+
+//         res.json(post);
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ error: 'Server error' });
+//     }
+// });
 app.listen(4000)

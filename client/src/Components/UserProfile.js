@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import '../App.css'
 import { Link } from 'react-router-dom'
 import EditProfile from '../Images/Edit-Profile.png'
@@ -6,11 +6,48 @@ import ChangePassword from '../Images/Edit-Password.png'
 import { formatISO9075 } from "date-fns";
 import EditIcon from '../Images/edit.png'
 import DeleteIcon from '../Images/delete-icon.png'
+import { toast } from 'react-toastify';
+import { UserContext } from '../UserContext';
 
 
 const UserProfile = () => {
     const [user, setUser] = useState([])
     const [data, setData] = useState([])
+    const [comment, setComment] = useState("")
+    const { userInfo } = useContext(UserContext)
+
+    const createComment = async (postId) => {
+        try {
+            const response = await fetch(`http://localhost:4000/post/${postId}/comments`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ user: userInfo._id, text: comment }),
+            });
+
+            if (response.ok) {
+                const updatedPost = await response.json();
+
+                // Update the data array with the updated post
+                const updatedData = data.map((post) => {
+                    if (post._id === updatedPost._id) {
+                        return updatedPost;
+                    }
+                    return post;
+                });
+
+                setData(updatedData);
+                setComment(''); // Clear the comment input
+                toast.success('Comment Added');
+            }
+            else {
+                toast.error('Error creating comment');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
     useEffect(() => {
         fetch('http://localhost:4000/userprofile', {
             method: 'GET',
@@ -27,7 +64,7 @@ const UserProfile = () => {
                 setData(posts)
             })
         })
-    }, [])
+    }, [comment])
     // console.log(data)
     return (
         <main>
@@ -40,7 +77,7 @@ const UserProfile = () => {
                     <p><b>Name:</b> {user.username}</p>
                     <p><b>Blogs:</b> {data.filter(post => user._id === post.author._id).length}</p>
                     <p><b>Likes: </b>0</p>
-                    <p><b>Comments: </b>0</p>
+                    <p><b>Comments: {}</b>0</p>
                     <div className='d-flex flex-column'>
                         <Link className='text-muted' to="/editprofile" style={{ textDecoration: "none", }}><img src={EditProfile} height={20} width={20} /> Edit Your Profile</Link>
                         <Link className='text-muted' to='/changepassword' style={{ textDecoration: "none" }}><img src={ChangePassword} height={20} width={20} /> Change Password</Link>
@@ -51,7 +88,7 @@ const UserProfile = () => {
             {data.map(post => (
 
                 user._id === post.author._id &&
-                <div className="card my-3">
+                <div className="card my-3" key={post._id}>
                     <div className="card-header">
                         <div className='d-flex justify-content-between align-items-center'>
                             <div className='d-flex align-items-center gap-3'>
@@ -84,7 +121,7 @@ const UserProfile = () => {
 
                                 <h6 style={{ cursor: "pointer" }}>Likes: 0</h6>
                             </div>
-                            <div style={{ cursor: "pointer" }}><h6>Comments: 0</h6></div>
+                            <div style={{ cursor: "pointer" }}><h6>Comments: {post.comments.length}</h6></div>
                             <Link to={`/post/${post._id}`} style={{ textDecoration: "none" }} className="align-items-center text-dark">
                                 Read More <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
@@ -96,7 +133,12 @@ const UserProfile = () => {
                             <div className='flex-grow-1'>
                                 <div className='d-flex'>
                                     <input type="text" className="form-control" id="floatingInput" placeholder="Write Comment...."
-                                        />
+                                        value={comment}
+                                        onChange={(e) => setComment(e.target.value)}
+                                        onKeyPress={(e) => {
+                                            if (e.key === 'Enter') createComment(post._id);
+                                        }}
+                                    />
                                 </div>
                             </div>
                         </div>
