@@ -8,7 +8,7 @@ const ChangePassword = () => {
     const navigate = useNavigate();
     const changePasswordHandler = async (e) => {
         e.preventDefault();
-        const response = await fetch("http://localhost:4000/userprofile/changePassword",
+        const response = await fetch("http://localhost:4000/changePassword",
             {
                 method: 'POST',
                 body: JSON.stringify({ newpassword, confirmpassword }),

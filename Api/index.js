@@ -358,7 +358,32 @@ app.post('/post/:postId/comments', async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
-// app.post('/post/:postId/comments', async (req, res) => {
+app.post('/like/:postId', async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const { userId } = req.body;
+        // console.log(postId);
+        // console.log(userId);
+
+        // Check if the user has already liked the post
+        const post = await CPost.findById(postId);
+        if (!post) {
+            return res.status(404).json({ error: 'Post not found' });
+        }
+        // console.log(like.user)
+        // if (post.likes.some(like => like.user.toString() === userId)) {
+        //     return res.status(400).json({ error: 'You have already liked this post' });
+        // }
+
+        // Add the like to the post
+        post.likes.push({ user: userId });
+        await post.save();
+
+        res.status(200).json({ message: 'Post liked successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error liking post' });
+    }
+});
 //     const { postId } = req.params;
 //     const { user, text } = req.body;
 

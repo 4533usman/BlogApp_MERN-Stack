@@ -55,7 +55,7 @@ const EditProfile = () => {
                 <img alt='No File Uploaded..' src={files ? URL.createObjectURL(files[0]) : `http://localhost:4000/${user.cover}`} className='profile-img' />
                 <input type='file'
                     onChange={e => { setFiles(e.target.files) }}
-                    required
+                    
                 />
                 <input type='text' placeholder='Username'
                     value={username}
